@@ -7,9 +7,19 @@ import authRoutes from "./routes/authRoute.js";
 import userRoutes from "./routes/userRoutes.js";
 import notesRoutes from "./routes/notesRoutes.js";
 
-dbConnect();
+
 
 const server = express();
+
+server.use(async (req, res, next) => {
+  try {
+    await dbConnect();
+    next();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 
 server.use(helmet());
 
@@ -18,8 +28,10 @@ const PORT = process.env.PORT || 5001;
 server.use(express.json());
 server.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "*",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -27,6 +39,19 @@ server.use(
 server.use("/api/auth", authRoutes);
 server.use("/api/user", userRoutes);
 server.use("/api/notes", notesRoutes);
+
+// Error handling middleware
+server.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error("Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+);
 
 server.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
