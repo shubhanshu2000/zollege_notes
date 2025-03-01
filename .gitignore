@@ -1,5 +1,6 @@
-# Main folder .gitignore
+
 /fe/node_modules/
 /be/node_modules/
+/fe/.env
 /be/.env
 .DS_Store
