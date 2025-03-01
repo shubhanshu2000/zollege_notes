@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/hooks/useApi.ts
+
 import { useState, useCallback } from "react";
 
 // Types
