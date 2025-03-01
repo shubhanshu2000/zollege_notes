@@ -28,7 +28,7 @@ server.use("/api/auth", authRoutes);
 server.use("/api/user", userRoutes);
 server.use("/api/notes", notesRoutes);
 
-server.get("/api/health", (req, res) => {
+server.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 server.listen(PORT, () => {
