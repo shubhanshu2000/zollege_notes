@@ -1,10 +1,10 @@
-// backend/controllers/userController.ts
-import { Request, Response } from "express";
+import { Response } from "express";
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import { CustomRequest } from "../types/index.js";
 
 export const userController = {
-  async updateProfile(req: Request, res: Response) {
+  async updateProfile(req: CustomRequest, res: Response): Promise<void> {
     try {
       const { username, email, currentPassword, newPassword } = req.body;
       const userId = req.user!.id;
@@ -12,15 +12,15 @@ export const userController = {
       // Find user
       const user = await User.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        res.status(404).json({ message: "User not found" });
+        return;
       }
 
       // Verify current password
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ message: "Current password is incorrect" });
+        res.status(400).json({ message: "Current password is incorrect" });
+        return;
       }
 
       // Update user fields
