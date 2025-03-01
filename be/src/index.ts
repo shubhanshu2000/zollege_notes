@@ -40,18 +40,7 @@ server.use("/api/auth", authRoutes);
 server.use("/api/user", userRoutes);
 server.use("/api/notes", notesRoutes);
 
-// Error handling middleware
-server.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error("Error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-);
+;
 
 server.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
