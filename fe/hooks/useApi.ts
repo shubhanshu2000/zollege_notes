@@ -21,7 +21,7 @@ export interface ApiError {
 }
 
 export interface ApiResponse<T = unknown> {
-  data: T | null;
+  data: T | any;
   error: ApiError | null;
   status: number;
 }

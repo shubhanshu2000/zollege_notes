@@ -20,7 +20,7 @@ interface NoteFormData {
 }
 
 const Notes = () => {
-  const { execute, isLoading, error } = useApi<Note[]>();
+  const { execute, isLoading } = useApi<Note[]>();
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState<NoteFormData>({
     title: "",
@@ -74,7 +74,9 @@ const Notes = () => {
     });
 
     if (response.data) {
-      setNotes((prev) => [response.data, ...prev]);
+      setNotes((prev) =>
+        response.data ? [...prev, response.data as unknown as Note] : prev
+      );
       setNewNote({ title: "", content: "", category: "" });
     }
   };
@@ -108,11 +110,10 @@ const Notes = () => {
       requiresAuth: true,
     });
 
-    if (response.data) {
+    if (response.data && !Array.isArray(response.data)) {
+      const updatedNote = response.data as unknown as Note;
       setNotes((prev) =>
-        prev.map((note) =>
-          note._id === selectedNote._id ? response.data : note
-        )
+        prev.map((note) => (note._id === selectedNote._id ? updatedNote : note))
       );
       setIsEditModalOpen(false);
       setSelectedNote(null);
